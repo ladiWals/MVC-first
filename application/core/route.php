@@ -1,14 +1,18 @@
-<?php
+<?php 
+
 class Route
 {
 	static function start()
 	{
+		// Использую глобальную переменную, хранящую путь к серверу
+		global $server;
+
 		// Контроллер и действие по умолчанию
 		$controller_name = 'Main';
 		$action_name = 'index';
 		
 		//  Здесь содержится полный адрес, запрошенный пользователем
-		$routes = explode('/', $_SERVER['REQUEST_URI']);
+		$routes = explode('/', $_SERVER['REQUEST_URI']); setcookie('req', $_SERVER['REQUEST_URI']);
 
 		// Получаю имя контроллера
 		if ( !empty($routes[1]) )
@@ -32,7 +36,7 @@ class Route
 		$model_path = "application/models/" . $model_file;
 		if (file_exists($model_path))
 		{
-			include "application/models/" . $model_file;
+			include_once ($server . "application/models/" . $model_file);
 		}
 
 		// Подключаю файл с классом контроллера (если он существует)
@@ -40,7 +44,7 @@ class Route
 		$controller_path = "application/controllers/" . $controller_file;
 		if (file_exists($controller_path))
 		{
-			include "application/controllers/" . $controller_file;
+			include ($server . "application/controllers/" . $controller_file);
 		}
 		else
 		{
@@ -63,7 +67,7 @@ class Route
 
 	}
 	
-	function ErrorPage404()
+	static function ErrorPage404()
 	{
         $host = 'http://' . $_SERVER['HTTP_HOST'] . '/';
         header('HTTP/1.1 404 Not Found');
